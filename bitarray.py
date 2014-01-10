@@ -27,16 +27,23 @@ class BitArray():
         pass
 
     def set_bit(self, n):
-        # 4 bits --> 0xF for the bit mask
-        bucket = n >> self.bytes
-        bit = n & self.bit_mask
+        bucket, bit = self.__get_address(n)
         self.bitarray[bucket] = self.bitarray[bucket] | (1 << bit)
 
+    def reset_bit(self, n):
+        bucket, bit = self.__get_address(n)
+        self.bitarray[bucket] = self.bitarray[bucket] & ~(1 << bit)
+
     def get_bit(self, n):
-        # 4 bits --> 0xF for the bit mask
-        bucket = n >> self.bytes
-        bit = n & self.bit_mask
+        bucket, bit = self.__get_address(n)
         return self.__is_set(self.bitarray[bucket], bit)
+
+    def __get_address(self, n):
+        # position on the array
+        bucket = n >> self.bytes
+        # bit position on the element
+        bit = n & self.bit_mask
+        return bucket, bit
 
     def __is_set(self, n, bit):
         return (n & (1 << bit)) != 0
