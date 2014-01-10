@@ -44,6 +44,11 @@ class TestBitArray(unittest.TestCase):
         bigsize = sys.getsizeof(big.bitarray)
         self.assertEqual((2 ** (32 - 3)) + 72, bigsize, 'Big BitArray size')
 
+    def test_initialize(self):
+        ba = BitArray(10, 1)
+        for i in xrange(10):
+            self.assertTrue(ba.get_bit(i))
+
 
 if __name__ == '__main__':
     unittest.main()

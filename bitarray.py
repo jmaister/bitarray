@@ -4,15 +4,22 @@ import platform
 
 class BitArray():
 
-    def __init__(self, max_number):
-        bits = platform.architecture()[0]
-        if bits == '64bit':
+    def __init__(self, max_number, initialize=0):
+        bitsstr = platform.architecture()[0]
+        if bitsstr == '64bit':
             self.bits = 64
-        else:
+        elif bitsstr == '32bit':
             self.bits = 32
-
+        else:
+            raise AssertionError('The system is not 32 or 64 bits.')
         num_buckets = (max_number / self.bits) + 1
-        self.bitarray = [0] * int(num_buckets)
+
+        if initialize != 0 and initialize != 1:
+            raise AssertionError('initialize parameter must be 0 or 1.')
+
+        # 0x0000... or 0xFFFF...
+        self.bitarray = [initialize * int('1' * self.bits, 2)] * int(num_buckets)
+
         # 4 or 8
         self.bytes = int(self.bits / 8)
         # 0x000F or 0x000000FF
