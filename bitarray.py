@@ -13,18 +13,23 @@ class BitArray():
 
         num_buckets = (max_number / self.bits) + 1
         self.bitarray = [0] * int(num_buckets)
+        # 4 or 8
+        self.bytes = int(self.bits / 8)
+        # 0x000F or 0x000000FF
+        self.bit_mask = int('1' * self.bytes, 2)
+        pass
 
     def set_bit(self, n):
         # 4 bits --> 0xF for the bit mask
-        bucket = n >> 4
-        bit = n & 0x0000000F
-        self.bitarray[bucket] = self.bitarray[bucket] | (0x80000000 >> bit)
+        bucket = n >> self.bytes
+        bit = n & self.bit_mask
+        self.bitarray[bucket] = self.bitarray[bucket] | (1 << bit)
 
     def get_bit(self, n):
         # 4 bits --> 0xF for the bit mask
-        bucket = n >> 4
-        bit = n & 0x0000000F
+        bucket = n >> self.bytes
+        bit = n & self.bit_mask
         return self.__is_set(self.bitarray[bucket], bit)
 
     def __is_set(self, n, bit):
-        return (n & (0x80000000 >> bit)) != 0
+        return (n & (1 << bit)) != 0

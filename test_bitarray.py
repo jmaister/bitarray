@@ -35,6 +35,15 @@ class TestBitArray(unittest.TestCase):
         self.assertFalse(ba.get_bit(bignum + 1))
         self.assertFalse(ba.get_bit(bignum - 1))
 
+    def test_memory_size(self):
+        small = BitArray(10)
+        smallsize = sys.getsizeof(small.bitarray)
+        self.assertEqual(72, smallsize, 'Small BitArray size')
+
+        big = BitArray(2 ** 32)
+        bigsize = sys.getsizeof(big.bitarray)
+        self.assertEqual((2 ** (32 - 3)) + 72, bigsize, 'Big BitArray size')
+
 
 if __name__ == '__main__':
     unittest.main()
