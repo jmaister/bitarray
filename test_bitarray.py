@@ -54,6 +54,17 @@ class TestBitArray(unittest.TestCase):
         ba.reset_bit(6)
         self.assertFalse(ba.get_bit(6))
 
+    """
+    def test_max_memory(self):
+        # 4gb of numbers
+        bignum = 32 * 1024 * 1024 * 1024
+        ba = BitArray(bignum)
+
+        self.assertFalse(ba.get_bit(bignum))
+
+        ba.set_bit(bignum)
+        self.assertTrue(ba.get_bit(bignum))
+    """
 
 if __name__ == '__main__':
     unittest.main()

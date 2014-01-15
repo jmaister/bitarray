@@ -8,8 +8,12 @@ class BitArray():
         bitsstr = platform.architecture()[0]
         if bitsstr == '64bit':
             self.bits = 64
+            self.bit_mask = 0x0000003F
+            self.bit_offset = 6
         elif bitsstr == '32bit':
             self.bits = 32
+            self.bit_mask = 0x001F
+            self.bit_offset = 5
         else:
             raise AssertionError('The system is not 32 or 64 bits.')
         num_buckets = (max_number / self.bits) + 1
@@ -19,12 +23,6 @@ class BitArray():
 
         # 0x0000... or 0xFFFF...
         self.bitarray = [initialize * int('1' * self.bits, 2)] * int(num_buckets)
-
-        # 4 or 8
-        self.bytes = int(self.bits / 8)
-        # 0x000F or 0x000000FF
-        self.bit_mask = int('1' * self.bytes, 2)
-        pass
 
     def set_bit(self, n):
         bucket, bit = self.__get_address(n)
@@ -40,10 +38,18 @@ class BitArray():
 
     def __get_address(self, n):
         # position on the array
-        bucket = n >> self.bytes
+        bucket = n >> self.bit_offset
         # bit position on the element
         bit = n & self.bit_mask
         return bucket, bit
 
     def __is_set(self, n, bit):
         return (n & (1 << bit)) != 0
+
+    def __str__(self):
+        st = ''
+        n = 0
+        for x in self.bitarray:
+            st += str(n) + ': ' + bin(x) + '\n'
+            n = n + 1
+        return st
